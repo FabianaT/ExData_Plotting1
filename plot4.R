@@ -12,81 +12,54 @@ householdEnergyUsage$DateTime <- strptime(paste(householdEnergyUsage$Date, house
 householdEnergyUsage$Date <- as.Date(householdEnergyUsage$Date, format= "%d/%m/%Y")
 
 #######################################################################
-## Preparing Data To Plot 
-dataPlot1 <- householdEnergyUsage[, c("DateTime", "Sub_metering_1")]
-dataPlot2 <- householdEnergyUsage[, c("DateTime", "Sub_metering_2")]
-dataPlot3 <- householdEnergyUsage[, c("DateTime", "Sub_metering_3")]
-colnames(dataPlot1) <- c("DateTime", "Sub_metering")
-colnames(dataPlot2) <- c("DateTime", "Sub_metering")
-colnames(dataPlot3) <- c("DateTime", "Sub_metering")
-dataPlot1$Label <- "Sub_metering_1"
-dataPlot2$Label <- "Sub_metering_2"
-dataPlot3$Label <- "Sub_metering_3"
-
-dataPlot <- dataPlot1[, c("DateTime", "Sub_metering")]
-dataPlot <- rbind(dataPlot , dataPlot2[, c("DateTime", "Sub_metering")])
-dataPlot <- rbind(dataPlot , dataPlot3[, c("DateTime", "Sub_metering")])
-
-plotLabels <- dataPlot1$Label
-plotLabels <- append(plotLabels, values = dataPlot2$Label, after = length(plotLabels))
-plotLabels <- append(plotLabels, values = dataPlot3$Label, after = length(plotLabels))
-
-#######################################################################
 # Plot
 Sys.setlocale("LC_TIME", "English")
 
-par(mfrow = c(2, 2), mar = c(2, 2, 2, 2))
+par(mfrow = c(2, 2), mar = c(5, 4, 4, 2))
 
-## Plotting - Plot 1
 
-with(householdEnergyUsage, 
+with(householdEnergyUsage, { 
+	## Plotting - Plot 1
 	plot(DateTime, Global_active_power, 
 		type = "l", 
 		xlab = "",
-		ylab = "Global Active Power"))
+		ylab = "Global Active Power")
 
-## Plotting - Plot 2
-
-with(householdEnergyUsage, 
+	## Plotting - Plot 2
 	plot(DateTime, Voltage, 
 		type = "l", 
 		xlab = "datetime",
-		ylab = "Voltage"))
+		ylab = "Voltage")
 
-## Plotting - Plot 3
+	## Plotting - Plot 3
+	plot(DateTime, Sub_metering_1, 
+		type = "l",
+		xlab = "",
+		ylab = "Energy submetering",
+		col = "black")
 
-plot(dataPlot$DateTime, dataPlot$Sub_metering, 
-	type = "n",
-	xlab = "",
-	ylab = "Energy sub metering")
+	lines(DateTime, Sub_metering_2, 
+		col = "red")
+	lines(DateTime, Sub_metering_3, 
+		col = "blue")
 
-lines(dataPlot[(plotLabels == "Sub_metering_1"), "DateTime"], 
-	dataPlot[(plotLabels == "Sub_metering_1"), "Sub_metering"],
-	col = "black")
-lines(dataPlot[(plotLabels == "Sub_metering_2"), "DateTime"], 
-	dataPlot[(plotLabels == "Sub_metering_2"), "Sub_metering"],
-	col = "red")
-lines(dataPlot[(plotLabels == "Sub_metering_3"), "DateTime"], 
-	dataPlot[(plotLabels == "Sub_metering_3"), "Sub_metering"],
-	col = "blue")
+	legend("topright", 
+		lwd = 2,
+		col = c("black", "red", "blue"), 
+		legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
 
-legend("topright", 
-	lwd = 2,
-	col = c("black", "red", "blue"), 
-	box.lty = 0,
-	legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+	## Plotting - Plot 4
 
-## Plotting - Plot 4
-
-with(householdEnergyUsage, 
 	plot(DateTime, 
 		Global_reactive_power,
 		type = "l",
-		xlab = "datetime"))
+		xlab = "datetime")
+	}
+)
 
 
 ## Save Plots
-dev.copy(png, file = "plot4.png")
+dev.copy(png, file = "plot4.png", width = 480, height = 480)
 dev.off()
 
 

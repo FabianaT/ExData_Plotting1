@@ -11,44 +11,23 @@ householdEnergyUsage$DateTime <- paste(householdEnergyUsage$Date, householdEnerg
 householdEnergyUsage$DateTime <- strptime(paste(householdEnergyUsage$Date, householdEnergyUsage$Time), format = "%d/%m/%Y %H:%M:%S")
 householdEnergyUsage$Date <- as.Date(householdEnergyUsage$Date, format= "%d/%m/%Y")
 
+dataPlot <- householdEnergyUsage[, c("DateTime", "Sub_metering_1", "Sub_metering_2", "Sub_metering_3")]
+
 #######################################################################
 # Plot
-
-## Preparing Data To Plot 
-dataPlot1 <- householdEnergyUsage[, c("DateTime", "Sub_metering_1")]
-dataPlot2 <- householdEnergyUsage[, c("DateTime", "Sub_metering_2")]
-dataPlot3 <- householdEnergyUsage[, c("DateTime", "Sub_metering_3")]
-colnames(dataPlot1) <- c("DateTime", "Sub_metering")
-colnames(dataPlot2) <- c("DateTime", "Sub_metering")
-colnames(dataPlot3) <- c("DateTime", "Sub_metering")
-dataPlot1$Label <- "Sub_metering_1"
-dataPlot2$Label <- "Sub_metering_2"
-dataPlot3$Label <- "Sub_metering_3"
-
-dataPlot <- dataPlot1[, c("DateTime", "Sub_metering")]
-dataPlot <- rbind(dataPlot , dataPlot2[, c("DateTime", "Sub_metering")])
-dataPlot <- rbind(dataPlot , dataPlot3[, c("DateTime", "Sub_metering")])
-
-plotLabels <- dataPlot1$Label
-plotLabels <- append(plotLabels, values = dataPlot2$Label, after = length(plotLabels))
-plotLabels <- append(plotLabels, values = dataPlot3$Label, after = length(plotLabels))
 
 ## Plotting
 Sys.setlocale("LC_TIME", "English")
 
-plot(dataPlot$DateTime, dataPlot$Sub_metering, 
-	type = "n",
+plot(dataPlot$DateTime, dataPlot$Sub_metering_1, 
+	type = "l",
 	xlab = "",
-	ylab = "Energy sub metering")
-
-lines(dataPlot[(plotLabels == "Sub_metering_1"), "DateTime"], 
-	dataPlot[(plotLabels == "Sub_metering_1"), "Sub_metering"],
+	ylab = "Energy sub metering",
 	col = "black")
-lines(dataPlot[(plotLabels == "Sub_metering_2"), "DateTime"], 
-	dataPlot[(plotLabels == "Sub_metering_2"), "Sub_metering"],
+
+lines(dataPlot$DateTime, dataPlot$Sub_metering_2, 
 	col = "red")
-lines(dataPlot[(plotLabels == "Sub_metering_3"), "DateTime"], 
-	dataPlot[(plotLabels == "Sub_metering_3"), "Sub_metering"],
+lines(dataPlot$DateTime, dataPlot$Sub_metering_3, 
 	col = "blue")
 
 legend("topright", 

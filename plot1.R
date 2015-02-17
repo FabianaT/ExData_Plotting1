@@ -1,4 +1,11 @@
 #######################################################################
+# Download Data
+
+# fileURL <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
+# download.file(fileURL, destfile = "project.zip")
+# unzip("project.zip")
+
+#######################################################################
 # Read Data
 ## We will only be using data from the dates 2007-02-01 and 2007-02-02
 require(sqldf)
@@ -8,7 +15,7 @@ householdEnergyUsage <- read.csv.sql(file, header = T, sep=";", sql = "select * 
 #######################################################################
 # Plot
 
-hist(householdEnergyUsage$Global_active_power, col = "red", main = "Global Active Power",  xlab = "Global Active Power (killowatts)")
+hist(householdEnergyUsage$Global_active_power, col = "red", main = "Global Active Power",  xlab = "Global Active Power (kilowatts)")
 dev.copy(png, file = "plot1.png")
 dev.off()
 
